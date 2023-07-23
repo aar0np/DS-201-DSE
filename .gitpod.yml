@@ -14,8 +14,7 @@ tasks:
       sdk use java 8.0.372-amzn
 
       # download DSE
-      curl https://archive.apache.org/dist/cassandra/4.1.0/apache-cassandra-4.1.0-bin.tar.gz \
-        --output apache-cassandra-4.1.0-bin.tar.gz
+      curl -OL https://downloads.datastax.com/enterprise/dse-6.8.tar.gz
 
     command: |
       gp open README.md
