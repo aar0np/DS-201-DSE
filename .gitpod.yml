@@ -1,0 +1,25 @@
+image:
+  file: .gitpod.Dockerfile
+tasks:
+  - name: setup
+    before: |
+      # REMOVE USER VALIDATION -Y ON JAVA 8 INSTALLATION
+      sed -i '1,$s/sdkman_auto_answer=false/sdkman_auto_answer=true/' /home/gitpod/.sdkman/etc/config
+      sed -i '1,$s/sdkman_selfupdate_enable=true/sdkman_selfupdate_enable=false/' /home/gitpod/.sdkman/etc/config
+      
+      # JAVA 8 INSTALL
+      sdk install java 8.0.372-amzn
+
+      # "use" Java 8
+      sdk use java 8.0.372-amzn
+
+      # download DSE
+      curl https://archive.apache.org/dist/cassandra/4.1.0/apache-cassandra-4.1.0-bin.tar.gz \
+        --output apache-cassandra-4.1.0-bin.tar.gz
+
+    command: |
+      gp open README.md
+ports:
+  - port: 8080
+    onOpen: open-browser
+    visibility: public
