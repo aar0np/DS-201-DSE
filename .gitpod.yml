@@ -16,6 +16,18 @@ tasks:
       # download DSE
       curl -OL https://downloads.datastax.com/enterprise/dse-6.8.tar.gz
 
+      #create /var/log and /var/lib cassandra ahead of time!
+      sudo mkdir /var/log/cassandra
+      sudo mkdir /var/lib/cassandra
+
+      #set ownership to gitpod user
+      sudo chown -R gitpod:gitpod /var/lib/cassandra/
+      sudo chown -R gitpod:gitpod /var/log/cassandra/
+
+      #set permissions
+      sudo chmod 750 /var/log/cassandra
+      sudo chmod 750 /var/lib/cassandra
+
     command: |
       gp open README.md
 ports:
