@@ -30,6 +30,7 @@ tasks:
 
     command: |
       gp open README.md
+      unset JAVA_TOOL_OPTIONS
 ports:
   - port: 8080
     onOpen: open-browser
