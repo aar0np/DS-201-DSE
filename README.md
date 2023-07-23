@@ -1,6 +1,10 @@
 # Exercises for DS201
 
-Exercises for DS201
+## Start GitPod instance
+
+[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/aar0np/DS-201-DSE)
+
+## Exercises for DS201
 
 - [Ex 01 - Install and Start Apache Cassandra](https://github.com/DataStax-Academy/ds201-lab01/)
 - [Ex 02 - Quick Wins](https://github.com/DataStax-Academy/ds201-lab02/)
