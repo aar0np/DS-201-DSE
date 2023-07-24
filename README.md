@@ -10,7 +10,7 @@
 - [Ex 02 - Quick Wins](https://github.com/DataStax-Academy/ds201-lab02/)
 - [Ex 03 - Partitions](https://github.com/DataStax-Academy/ds201-lab03/)
 - [Ex 04 - Clustering Columns](https://github.com/DataStax-Academy/ds201-lab04/)
-- [Ex 05 - Application Connectivity](https://github.com/DataStax-Academy/ds201-lab05/)
+- [Examples for Python & Java](https://github.com/aar0np/workshop-cassandra-application-development/)
 - [Ex 06 - Node](https://github.com/DataStax-Academy/ds201-lab06/)
 - [Ex 07 - Ring](https://github.com/DataStax-Academy/ds201-lab07/)
 - [Ex 08 - Peer-to-Peer](https://github.com/DataStax-Academy/ds201-lab08/)
