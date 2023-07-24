@@ -36,4 +36,4 @@ tasks:
       unset JAVA_TOOL_OPTIONS
 ports:
   - port: 8080
-    onOpen: open-preview
+    onOpen: open-browser
