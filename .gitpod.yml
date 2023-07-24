@@ -1,6 +1,9 @@
 image:
   file: .gitpod.Dockerfile
 tasks:
+  - name: main-console
+    command: |
+      clear
   - name: setup
     before: |
       # REMOVE USER VALIDATION -Y ON JAVA 8 INSTALLATION
