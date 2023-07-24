@@ -32,6 +32,8 @@ tasks:
       gp open README.md
       unset JAVA_TOOL_OPTIONS
 ports:
+  - port: 8888
+     onOpen: open-preview
   - port: 8080
-    onOpen: open-preview
-    visibility: private
+     visibility: public
+     onOpen: open-browser
