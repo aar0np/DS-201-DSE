@@ -16,8 +16,10 @@ tasks:
       # "use" Java 8
       sdk use java 8.0.372-amzn
 
-      # download DSE
-      curl -OL https://downloads.datastax.com/enterprise/dse-6.8.tar.gz
+      # download DSE - but it's kinda big, so only if it doesn't exist
+      if [ ! -f dse-6.8.tar.gz ]; then
+          curl -OL https://downloads.datastax.com/enterprise/dse-6.8.tar.gz
+      fi
 
       #create /var/log and /var/lib cassandra ahead of time!
       sudo mkdir /var/log/cassandra
@@ -37,3 +39,11 @@ tasks:
 ports:
   - port: 8080
     onOpen: open-browser
+  - port: 7000
+    visibility: private
+  - port: 7199
+    visibility: private
+  - port: 9042
+    visibility: private
+  - port: 8609
+    visibility: private

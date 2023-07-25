@@ -1,17 +1,334 @@
+<!-- TOP -->
+<div class="top">
+  <img class="scenario-academy-logo" src="https://datastax-academy.github.io/katapod-shared-assets/images/ds-academy-2023.svg" />
+</div>
+
 # Exercises for DS201
+
+## Table of Contents
+
+1. [Install and Start Cassandra](#1-install-and-start-cassandra)
+2. [Quick Wins](#2-quick-wins)
+3. [Partitions](#3-partitions)
+
+
 
 ## Start GitPod instance
 
 [![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/aar0np/DS-201-DSE)
 
-## Exercises for DS201
+## Exercises
 
-- [Ex 01 - Install and Start Apache Cassandra](https://github.com/DataStax-Academy/ds201-lab01/)
-- [Ex 02 - Quick Wins](https://github.com/DataStax-Academy/ds201-lab02/)
-- [Ex 03 - Partitions](https://github.com/DataStax-Academy/ds201-lab03/)
+### 1. Install and Start Cassandra
+
+Click the GitPod button above.  It should start a new instance for you.
+
+Your GitPod instance should have DSE 6.8.372 already downloaded.
+
+✅ View the downloaded tarball:
+```
+ls -l
+```
+
+✅ Extract tarball:
+```
+tar -zvxf dse-6.8.tar.gz
+```
+
+The directory should now contain the tarball and the `dse-6.8.32` directory
+
+✅ View the directory:
+```
+ls -l
+```
+
+✅ Switch to the `dse-6.8.32` directory.
+```
+cd dse-6.8.32
+```
+
+✅ View the `bin` directory:
+```
+ls -l bin
+```
+
+✅ Start DSE:
+```
+bin/dse cassandra
+```
+
+It may take a while for DSE to start.  While it is displaying output in the terminal, it is running in the background.
+Feel free to press any key once the output stops moving.
+
+✅ Run *nodetool* to determine Cassandra's status (you may have to run this command multiple times until Cassandra starts):
+```
+bin/nodetool status
+```
+
+### 2. Quick Wins
+
+#### Create a keyspace and a table
+
+Welcome to the KillrVideo company! KillrVideo hired you to build the latest and greatest video sharing application on the Internet. Your task is to ramp up on the domain and become acquainted with Apache Cassandra. To start, you are looking into creating a table schema and to load some data.
+
+The video metadata is made up of:
+
+<table class="katapod-table">
+  <tr>
+    <th>Column Name</th>
+    <th>Date Type </th>
+  </tr>
+  <tr>
+    <td>video_id</td>
+    <td>timeuuid</td>
+  <tr>
+  <tr>
+    <td>added_date</td>
+    <td>timestamp</td>
+  <tr>
+    <tr>
+    <td>title</td>
+    <td>text</td>
+  <tr>
+</table>
+
+✅ Use `nodetool` to verify that Cassandra is running (you may need to run this multiple times):
+```
+bin/nodetool status
+```
+
+✅ Start the command line tool `cqlsh`:
+```
+bin/cqlsh
+```
+
+- Or -
+```
+bin/cqlsh 127.0.0.1 -u cassandra -p cassandra
+```
+
+
+✅ Create a keyspace called *killrvideo*. Use `NetworkTopologyStrategy` for the replication class with a data center of "Cassandra" and a replication factor of one.
+
+```
+CREATE KEYSPACE killrvideo
+WITH replication = {
+  'class':'NetworkTopologyStrategy', 
+  'Cassandra': 1
+};
+```
+
+✅ Switch to the newly created keyspace with the *USE* command:
+
+```
+USE killrvideo;
+```
+
+✅ Create a table called `videos` with columns `video_id` of type `TIMEUUID`, `added_date` of type `TIMESTAMP` and `title` of type `TEXT`. Designate `video_id` as the primary key.
+
+```
+CREATE TABLE videos (
+  video_id TIMEUUID,
+  added_date TIMESTAMP,
+  title TEXT,
+  PRIMARY KEY (video_id)
+);
+```
+
+#### Insert and Load Data
+
+<table class="katapod-table">
+  <tr>
+    <th>video_id</th>
+    <th>added_date</th>
+    <th>title</th>
+  </tr>
+  <tr>
+    <td>36b8bac0-6260-11ea-ac4c-87a8af4b7ed0</td>
+    <td>2020-03-09</td>
+    <td>Foundations of DataStax Enterprise</td>
+  <tr>
+</table>
+
+```
+INSERT INTO videos (video_id, added_date, title)
+VALUES (36b8bac0-6260-11ea-ac4c-87a8af4b7ed0, '2020-03-09', 'Foundations of DataStax Enterprise');
+```
+
+✅ Use a `SELECT` statement to retrieve your row from the table.
+
+```
+SELECT * from videos;
+```
+
+Remember though, using a `WHERE` clause is a good habit to get into:
+
+```
+SELECT * FROM videos
+WHERE video_id=36b8bac0-6260-11ea-ac4c-87a8af4b7ed0;
+```
+
+✅ Insert another row into the table.
+
+```
+INSERT INTO videos (video_id, added_date, title)
+VALUES (95fe9800-2c2f-11b2-8080-808080808080, '2020-01-20', 'Cassandra Data Modeling');
+```
+
+✅ Retrieve all rows from the table.
+```
+SELECT * from videos LIMIT 10;
+```
+
+✅ Delete all previously inserted rows from the table using the `TRUNCATE` statement and verify that the table is empty.
+
+```
+TRUNCATE videos;
+SELECT * from videos;
+```
+
+✅ Use the `COPY` command to import data into your `videos` table.
+```
+COPY videos(video_id, added_date, title)
+FROM '/workspace/DS-201-DSE/data/videos.csv'
+WITH HEADER=TRUE;
+```
+
+✅ Retrieve all rows from the table to verify that the table loaded correctly.
+```
+SELECT * from videos LIMIT 10;
+```
+
+### 3. Partitions
+
+#### Explore the `videos` table
+
+✅ Verify that Cassandra is running.
+```
+bin/nodetool status
+```
+✅ Start 'cqlsh' so you can execute CQL statements:
+```
+bin/cqlsh
+```
+✅ Switch to the killrvideo keyspace via the USE command:
+```
+USE killrvideo;
+```
+
+✅ Execute the following command to view information about the videos table:
+```
+DESCRIBE TABLE videos;
+```
+
+##### Question: What is the partition key for the videos table?
+
+##### Question: How many partitions are in the videos table?
+
+---
+**Note:** This table has a single row in each partition rather than using partitions to group related rows. This is an anti-pattern!
+
+---
+
+✅ Execute the following query to see how partition key values are mapped to tokens by the partitioner:
+```
+SELECT token(video_id), video_id FROM videos LIMIT 10;
+```
+
+✅ Exit *cqlsh*:
+```
+quit
+```
+- Or -
+
+```
+exit
+```
+
+✅ Inspect the `videos-by-tag.csv` file that we will import into a new table:
+```
+cat /workspace/DS-201-DSE/data/videos-by-tag.csv
+```
+
+- Or -
+```
+gp open /workspace/DS-201-DSE/videos-by-tag.csv
+```
+
+- Or just click on it in GitPod. -
+
+Notice how this CSV file categorizes the videos using *tags*: `datastax`, and `cassandra`.
+
+✅ Start *cqlsh* again and switch to the *killrvideo* keyspace:
+
+```
+cqlsh
+
+USE killrvideo;
+```
+
+✅ Create a new table with name `videos_by_tag` that can store data from file *videos_by_tag.csv*, such that we get one partition for every tag and each partition can have multiple rows with videos. 
+
+```
+CREATE TABLE videos_by_tag (
+  tag TEXT,
+  video_id TIMEUUID,
+  added_date TIMESTAMP,
+  title TEXT,
+  PRIMARY KEY ((tag), video_id)
+);
+```
+
+✅ Use the COPY command to import the `videos-by-tag.csv` data into your new table:
+```
+COPY videos_by_tag (tag, video_id, added_date, title)
+FROM '/workspace/DS-201-DSE/data/videos-by-tag.csv'
+WITH HEADER = TRUE;
+```
+
+✅ Retrieve all rows from table *videos_by_tag* and verify that you get 5 rows as expected.
+
+If the table only has 2 rows instead of 5, make sure that the table primary key has enough columns so that it can uniquely identify each row.
+
+You can always `TRUNCATE videos_by_tag`, then execute `DROP TABLE videos_by_tag;` and go back to the previous steps to make any necessary corrections.
+
+```
+SELECT * FROM videos_by_tag LIMIT 10;
+```
+
+#### Run some queries
+
+✅ Retrieve all videos tagged with cassandra from table `videos_by_tag`
+```
+SELECT * FROM videos_by_tag WHERE tag = 'cassandra';
+```
+
+✅ Retrieve all videos tagged with datastax from table `videos_by_tag`
+```
+SELECT * FROM videos_by_tag WHERE tag = 'datastax';
+```
+
+✅ Finally, retrieve any video titled Cassandra & SSDs from table videos_by_tag.
+```
+SELECT * FROM videos_by_tag WHERE title = 'Cassandra & SSDs';
+```
+
+You should see an error something like this. This is expected. Cassandra only allows efficient queries on primary key columns, which for this table doesn’t include the `title` column.
+<hr>
+<div style="color:red;">InvalidRequest: Error from server: code=2200 [Invalid query] message="Cannot execute this query as it might involve data filtering and thus may have unpredictable performance. If you want to execute this query despite the performance unpredictability, use ALLOW FILTERING"</div> 
+<hr>
+
+✅ For now, you can use ALLOW FILTERING to execute this query but should know that <span style="color:red;">this is anti-pattern!!!</span>: the query requires scanning all rows in the table, which is not feasible for real-life large data sets.
+```
+SELECT * FROM videos_by_tag 
+WHERE title = 'Cassandra & SSDs' ALLOW FILTERING;
+```
+
+
+
 - [Ex 04 - Clustering Columns](https://github.com/DataStax-Academy/ds201-lab04/)
 
-- [Workshop code w/ examples for Python & Java](https://github.com/aar0np/workshop-cassandra-application-development/)
+- [Workshop code w/ examples for Python & Java](https://github.com/datastaxdevs/workshop-cassandra-application-development/)
 	- [testCassandra.go](https://github.com/aar0np/go_stuff/blob/main/testCassandra.go)
 	- [testCassandra.py](https://github.com/aar0np/DS_Python_stuff/blob/main/testCassandra.py)
 	- [TestCassandra.java](https://github.com/aar0np/testcassandra/blob/main/src/main/java/testcassandra/TestCassandra.java)
