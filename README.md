@@ -467,17 +467,3 @@ LIMIT 1;
 	- [TestCassandra.java](https://github.com/aar0np/testcassandra/blob/main/src/main/java/testcassandra/TestCassandra.java)
 
 - [Awesome Astra](https://awesome-astra.github.io/docs/pages/develop/)
-
-
-
-- [Ex 06 - Node](https://github.com/DataStax-Academy/ds201-lab06/)
-- [Ex 07 - Ring](https://github.com/DataStax-Academy/ds201-lab07/)
-- [Ex 08 - Peer-to-Peer](https://github.com/DataStax-Academy/ds201-lab08/)
-- [Ex 09 - VNodes](https://github.com/DataStax-Academy/ds201-lab09/)
-- [Ex 10 - Gossip](https://github.com/DataStax-Academy/ds201-lab10/)
-- [Ex 11 - Snitch](https://github.com/DataStax-Academy/ds201-lab11/)
-- [Ex 12 - Replication](https://github.com/DataStax-Academy/ds201-lab12/)
-- [Ex 13 - Consistency](https://github.com/DataStax-Academy/ds201-lab13/)
-- [Ex 14 - Hinted Handoff](https://github.com/DataStax-Academy/ds201-lab14/)
-- [Ex 15 - Read Repair](https://github.com/DataStax-Academy/ds201-lab15/)
-
