@@ -10,8 +10,8 @@
 1. [Install and Start Cassandra](#1-install-and-start-cassandra)
 2. [Quick Wins](#2-quick-wins)
 3. [Partitions](#3-partitions)
-
-
+4. [Clustering Columns](#4-clustering-columns)
+5. [Application Connectivity](#5-application-connectivity)
 
 ## Start GitPod instance
 
@@ -324,14 +324,151 @@ SELECT * FROM videos_by_tag
 WHERE title = 'Cassandra & SSDs' ALLOW FILTERING;
 ```
 
+### 4. Clustering Columns
 
+Clustering columns are the columns that are part of the primary key, but are not part of the partition key. This exercise will help you understand how clustering columns affects queries and how you can filter rows with them.
 
-- [Ex 04 - Clustering Columns](https://github.com/DataStax-Academy/ds201-lab04/)
+✅ Verify that Cassandra is running.
+```
+bin/nodetool status
+```
 
-- [Workshop code w/ examples for Python & Java](https://github.com/datastaxdevs/workshop-cassandra-application-development/)
+✅ Start 'cqlsh' so you can execute CQL statements:
+```
+bin/cqlsh 127.0.0.1 -u cassandra -p cassandra
+```
+✅ Switch to the killrvideo keyspace via the USE command:
+```
+USE killrvideo;
+```
+
+✅ Execute the following command to view information about the videos table:
+```
+DESCRIBE TABLE videos_by_tag;
+```
+
+You should see the following table definition
+```
+CREATE TABLE killrvideo.videos_by_tag (
+    tag text,
+    video_id timeuuid,
+    title text,
+    PRIMARY KEY (tag, video_id)
+) ...
+```
+
+In this table the prartition key is tag and the clustering column is video_id. Therefore, rows are grouped by tag and ordered by video_id.
+
+Clustering columns support both equality and inequality predicates for CQL queries and also allow ordering within a partition. Define and execute several CQL queries against table videos_by_tag that use equality (=) and inequality (>,>=,<,<=) predicates, as well as row ordering with the ORDER BY clause.
+
+✅ Select all videos:
+```
+SELECT * FROM videos_by_tag LIMIT 10;
+```
+
+✅ Select a specific partition:
+```
+SELECT * FROM videos_by_tag
+WHERE tag = 'cassandra';
+```
+
+✅ Select a specific video:
+```
+SELECT * FROM videos_by_tag
+WHERE tag = 'cassandra' AND
+      video_id =  245e8024-14bd-11e5-9743-8238356b7e32;
+```
+
+✅ Select videos using an inequality:
+```
+SELECT * FROM videos_by_tag
+WHERE tag = 'cassandra' AND
+      video_id <= 245e8024-14bd-11e5-9743-8238356b7e32;
+```
+
+✅ Select videos using an inequality and reverse the order:
+```
+SELECT * FROM videos_by_tag
+WHERE tag = 'cassandra' AND
+      video_id <= 245e8024-14bd-11e5-9743-8238356b7e32
+ORDER BY video_id DESC;
+```
+
+#### Create the latest_videos_by_tag table.
+
+In this portion of the exercise, you will create a table that supports queries like this one.
+
+```
+SELECT tag, video_id, added_date, title
+    FROM latest_videos_by_tag
+    WHERE tag = 'cassandra'
+    ORDER BY added_date DESC;
+```
+Rows will be grouped by tag and ordered by added_date. You will need to use `video_id` as part of the primary key to ensure uniqueness.
+
+✅ Create the table:
+```
+CREATE TABLE latest_videos_by_tag (
+  tag TEXT,
+  video_id TIMEUUID,
+  added_date TIMESTAMP,
+  title TEXT,
+  PRIMARY KEY ((tag), added_date, video_id)
+) WITH CLUSTERING ORDER BY (added_date DESC, video_id ASC);
+```
+
+✅ Import videos-by-tag.csv into the new table:
+```
+COPY latest_videos_by_tag(tag, video_id, added_date, title)
+FROM '/workspace/DS-201-DSE/data/videos-by-tag.csv'
+WITH HEADER = TRUE;
+```
+
+✅ Retrieve all the rowa from latest_videos_by_tag:
+```
+SELECT * FROM latest_videos_by_tag LIMIT 10;
+```
+
+Verify that you get 4 rows as expected.
+
+The rows should be grouped by a tag and, within each partition, ordered in descending order of an added date.
+
+✅ Execute the original CQL query that table latest_videos_by_tag was designed for:
+```
+SELECT tag, video_id, added_date, title
+FROM latest_videos_by_tag
+WHERE tag = 'cassandra'
+ORDER BY added_date DESC;
+```
+
+✅ Change the original query below to return the cassandra videos added after 2013-02-01:
+```
+SELECT tag, video_id, added_date, title
+FROM latest_videos_by_tag
+WHERE tag = 'cassandra' AND
+      added_date > '2013-02-01'
+ORDER BY added_date DESC;
+```
+
+✅ Change the original query below to return the oldest cassandra video from the table. Use LIMIT 1 to return only the first video in a result set:
+```
+SELECT tag, video_id, added_date, title
+FROM latest_videos_by_tag
+WHERE tag = 'cassandra'
+ORDER BY added_date ASC
+LIMIT 1;
+```
+
+### 5. Application Connectivity
+
+- [Workshop code w/ examples for Go, Python, and Java](https://github.com/datastaxdevs/workshop-cassandra-application-development/)
 	- [testCassandra.go](https://github.com/aar0np/go_stuff/blob/main/testCassandra.go)
 	- [testCassandra.py](https://github.com/aar0np/DS_Python_stuff/blob/main/testCassandra.py)
 	- [TestCassandra.java](https://github.com/aar0np/testcassandra/blob/main/src/main/java/testcassandra/TestCassandra.java)
+
+- [Awesome Astra](https://awesome-astra.github.io/docs/pages/develop/)
+
+
 
 - [Ex 06 - Node](https://github.com/DataStax-Academy/ds201-lab06/)
 - [Ex 07 - Ring](https://github.com/DataStax-Academy/ds201-lab07/)
