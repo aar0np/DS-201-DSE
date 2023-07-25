@@ -461,7 +461,8 @@ LIMIT 1;
 
 ### 5. Application Connectivity
 
-- [Workshop code w/ examples for Go, Python, and Java](https://github.com/datastaxdevs/workshop-cassandra-application-development/)
+- [Workshop code w/ examples for Python, and Java](https://github.com/datastaxdevs/workshop-cassandra-application-development/)
+- Simple examples for Go, Python, and Java:	
 	- [testCassandra.go](https://github.com/aar0np/go_stuff/blob/main/testCassandra.go)
 	- [testCassandra.py](https://github.com/aar0np/DS_Python_stuff/blob/main/testCassandra.py)
 	- [TestCassandra.java](https://github.com/aar0np/testcassandra/blob/main/src/main/java/testcassandra/TestCassandra.java)
