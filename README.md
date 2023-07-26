@@ -314,9 +314,9 @@ SELECT * FROM videos_by_tag WHERE title = 'Cassandra & SSDs';
 ```
 
 You should see an error something like this. This is expected. Cassandra only allows efficient queries on primary key columns, which for this table doesn’t include the `title` column.
-<hr>
-<div style="color:red;">InvalidRequest: Error from server: code=2200 [Invalid query] message="Cannot execute this query as it might involve data filtering and thus may have unpredictable performance. If you want to execute this query despite the performance unpredictability, use ALLOW FILTERING"</div> 
-<hr>
+```
+InvalidRequest: Error from server: code=2200 [Invalid query] message="Cannot execute this query as it might involve data filtering and thus may have unpredictable performance. If you want to execute this query despite the performance unpredictability, use ALLOW FILTERING"</div> 
+```
 
 ✅ For now, you can use ALLOW FILTERING to execute this query but should know that <span style="color:red;">this is anti-pattern!!!</span>: the query requires scanning all rows in the table, which is not feasible for real-life large data sets.
 ```
