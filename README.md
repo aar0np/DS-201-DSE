@@ -64,7 +64,7 @@ Feel free to press any key once the output stops moving.
 ```
 bin/nodetool status
 ```
-
+---
 ### 2. Quick Wins
 
 #### Create a keyspace and a table
@@ -198,7 +198,7 @@ WITH HEADER=TRUE;
 ```
 SELECT * from videos LIMIT 10;
 ```
-
+---
 ### 3. Partitions
 
 #### Explore the `videos` table
@@ -323,7 +323,7 @@ You should see an error something like this. This is expected. Cassandra only al
 SELECT * FROM videos_by_tag 
 WHERE title = 'Cassandra & SSDs' ALLOW FILTERING;
 ```
-
+---
 ### 4. Clustering Columns
 
 Clustering columns are the columns that are part of the primary key, but are not part of the partition key. This exercise will help you understand how clustering columns affects queries and how you can filter rows with them.
@@ -458,7 +458,7 @@ WHERE tag = 'cassandra'
 ORDER BY added_date ASC
 LIMIT 1;
 ```
-
+---
 ### 5. Application Connectivity
 
 - [Workshop code w/ examples for Python, and Java](https://github.com/datastaxdevs/workshop-cassandra-application-development/)
@@ -468,3 +468,5 @@ LIMIT 1;
 	- [TestCassandra.java](https://github.com/aar0np/testcassandra/blob/main/src/main/java/testcassandra/TestCassandra.java)
 
 - [Awesome Astra](https://awesome-astra.github.io/docs/pages/develop/)
+
+---
