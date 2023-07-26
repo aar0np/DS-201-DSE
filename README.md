@@ -318,7 +318,7 @@ You should see an error something like this. This is expected. Cassandra only al
 > InvalidRequest: Error from server: code=2200 [Invalid query] message="Cannot execute this query as it might involve data filtering and thus may have unpredictable performance. If you want to execute this query despite the performance unpredictability, use ALLOW FILTERING"
 
 
-✅ For now, you can use ALLOW FILTERING to execute this query but should know that <span style="color:red;">this is anti-pattern!!!</span>: the query requires scanning all rows in the table, which is not feasible for real-life large data sets.
+✅ For now, you can use ALLOW FILTERING to execute this query but should know that this is an anti-pattern! The query requires scanning all rows in the table, which is not feasible for real-life large data sets.
 ```
 SELECT * FROM videos_by_tag 
 WHERE title = 'Cassandra & SSDs' ALLOW FILTERING;
