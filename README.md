@@ -470,3 +470,6 @@ LIMIT 1;
 - [Awesome Astra](https://awesome-astra.github.io/docs/pages/develop/)
 
 ---
+
+Link to Java exercise repo: [DS-Java-DSE](https://github.com/aar0np/DS-Java-DSE/tree/main)
+
